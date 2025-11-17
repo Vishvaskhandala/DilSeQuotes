@@ -1,0 +1,35 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.DilSeQuotes" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primary_dark</item>
+        <item name="colorOnPrimary">@color/onPrimary_dark</item>
+        <item name="colorPrimaryContainer">@color/primaryContainer_dark</item>
+        <item name="colorOnPrimaryContainer">@color/onPrimaryContainer_dark</item>
+        <item name="colorSecondary">@color/secondary_dark</item>
+        <item name="colorOnSecondary">@color/onSecondary_dark</item>
+        <item name="colorSecondaryContainer">@color/secondaryContainer_dark</item>
+        <item name="colorOnSecondaryContainer">@color/onSecondaryContainer_dark</item>
+        <item name="colorTertiary">@color/tertiary_dark</item>
+        <item name="colorOnTertiary">@color/onTertiary_dark</item>
+        <item name="colorTertiaryContainer">@color/tertiaryContainer_dark</item>
+        <item name="colorOnTertiaryContainer">@color/onTertiaryContainer_dark</item>
+        <item name="colorError">@color/error_dark</item>
+        <item name="colorOnError">@color/onError_dark</item>
+        <item name="colorErrorContainer">@color/errorContainer_dark</item>
+        <item name="colorOnErrorContainer">@color/onErrorContainer_dark</item>
+        <item name="android:colorBackground">@color/background_dark</item>
+        <item name="colorOnBackground">@color/onBackground_dark</item>
+        <item name="colorSurface">@color/surface_dark</item>
+        <item name="colorOnSurface">@color/onSurface_dark</item>
+        <item name="colorSurfaceVariant">@color/surfaceVariant_dark</item>
+        <item name="colorOnSurfaceVariant">@color/onSurfaceVariant_dark</item>
+        <item name="colorOutline">@color/outline_dark</item>
+
+        <!-- Use Poppins as the default font family -->
+        <item name="android:fontFamily">@font/poppins_regular</item>
+        <item name="fontFamily">@font/poppins_regular</item>
+    </style>
+
+    <style name="Theme.DilSeQuotes" parent="Base.Theme.DilSeQuotes" />
+</resources>

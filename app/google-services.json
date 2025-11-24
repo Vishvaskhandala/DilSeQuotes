@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1015168969148",
+    "project_id": "dilse-quotes",
+    "storage_bucket": "dilse-quotes.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1015168969148:android:a0f863c3940be47d2463b9",
+        "android_client_info": {
+          "package_name": "com.example.dilsequotes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBEeiWOl5AWyp5PqIVG8e8qkS-wKngmKlo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

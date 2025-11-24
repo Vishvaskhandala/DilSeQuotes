@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">દિલ સે અવતરણ</string>
+    <string name="app_name_styled">💝 દિલ સે અવતરણ</string>
+    <string name="tagline">તમારી લાગણીઓ વ્યક્ત કરો</string>
+    <string name="quote_of_the_day_title">આજનો વિચાર 🌤️</string>
+    <string name="browse_categories">શ્રેણીઓ બ્રાઉઝ કરો</string>
+    <string name="quote_placeholder">અવતરણ લોડ કરી રહ્યું છે...</string>
+    <string name="loading">લોડ કરી રહ્યું છે...</string>
+    <string name="select_language">ભાષા પસંદ કરો</string>
+    <string name="cancel">રદ કરો</string>
+    <string name="copy_quote">અવતરણ કૉપિ કરો</string>
+    <string name="add_to_favorites">મનપસંદમાં ઉમેરો</string>
+    <string name="share_quote">અવતરણ શેર કરો</string>
+    <string name="category_love">❤️ પ્રેમ</string>
+    <string name="category_sad">😢 દુઃખ</string>
+    <string name="category_motivation">💪 પ્રેરણા</string>
+    <string name="category_friendship">🤝 મિત્રતા</string>
+    <string name="category_festival">🎉 તહેવાર</string>
+    <string name="category_daily">📅 દૈનિક</string>
+    <string name="category_unknown">અજ્ઞાત</string>
+    <string name="navigation_drawer_open">નેવિગેશન ડ્રોઅર ખોલો</string>
+    <string name="navigation_drawer_close">નેવિગેશન ડ્રોઅર બંધ કરો</string>
+</resources>

@@ -2,17 +2,21 @@
     <item
         android:id="@+id/home"
         android:title="Home"
+        android:contentDescription="Home Screen"
         android:icon="@drawable/ic_home"/>
     <item
         android:id="@+id/favorites"
         android:title="Favorites"
+        android:contentDescription="Favorite Quotes"
         android:icon="@drawable/ic_favoritepng"/>
     <item
         android:id="@+id/dailyQuote"
         android:title="Daily"
+        android:contentDescription="Daily Quote"
         android:icon="@drawable/ic_sun"/>
     <item
         android:id="@+id/settings"
         android:title="Settings"
+        android:contentDescription="App Settings"
         android:icon="@drawable/ic_settings"/>
 </menu>

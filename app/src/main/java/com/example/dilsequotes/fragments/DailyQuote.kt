@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.net.Uri
@@ -16,13 +17,16 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import com.example.dilsequotes.Logger
-import com.example.dilsequotes.MainActivity
 import com.example.dilsequotes.R
+import com.example.dilsequotes.data.database.AppDatabase
+import com.example.dilsequotes.data.model.CategoryConstants
 import com.example.dilsequotes.data.model.Quote
+import com.example.dilsequotes.data.repository.QuoteRepository
 import com.example.dilsequotes.databinding.FragmentDailyQuoteBinding
 import com.example.dilsequotes.viewmodel.QuoteViewModel
+import com.example.dilsequotes.viewmodel.ViewModelFactory
 import java.io.File
 import java.io.FileOutputStream
 
@@ -31,7 +35,12 @@ class DailyQuote : Fragment() {
     private var _binding: FragmentDailyQuoteBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: QuoteViewModel
+    private val viewModel: QuoteViewModel by activityViewModels {
+        val database = AppDatabase.getInstance(requireContext())
+        val repository = QuoteRepository(database.quoteDao(), requireContext()) // Pass context for network check
+        ViewModelFactory(repository,context)
+    }
+    private lateinit var sharedPreferences: SharedPreferences
     private var currentQuote: Quote? = null
 
     override fun onCreateView(
@@ -48,22 +57,26 @@ class DailyQuote : Fragment() {
 
         Logger.d("DailyQuote: onViewCreated - Daily quote screen displayed")
 
-        // Get the factory from the Activity
-        val factory = (requireActivity() as MainActivity).quoteViewModelFactory
-        viewModel = ViewModelProvider(this, factory)[QuoteViewModel::class.java]
+        sharedPreferences = requireContext().getSharedPreferences("DilSeShayari", Context.MODE_PRIVATE)
 
+        setupClickListeners()
+        observeViewModel()
         loadDailyQuote()
+    }
 
+    private fun setupClickListeners() {
         binding.refreshButton.setOnClickListener {
             Logger.d("DailyQuote: Refresh button tapped")
-            loadDailyQuote()
+            loadDailyQuote() // Refresh quotes based on network status
         }
 
         binding.favoriteButton.setOnClickListener {
             currentQuote?.let {
                 Logger.d("DailyQuote: Favorite button tapped for quote: ${it.text}")
                 viewModel.toggleFavorite(it)
-                updateFavoriteButton(it)
+                val updatedQuote = it.copy(isFavorite = !it.isFavorite)
+                currentQuote = updatedQuote
+                updateFavoriteButton(updatedQuote)
             }
         }
 
@@ -77,40 +90,45 @@ class DailyQuote : Fragment() {
         binding.shareButton.setOnClickListener {
             currentQuote?.let {
                 Logger.d("DailyQuote: Share button tapped for quote: ${it.text}")
-                shareQuote(it.text)
+                shareQuote(it.text, it.authorName)
             }
         }
 
-        binding.shareImageButton.setOnClickListener {
-            currentQuote?.let {
-                Logger.d("DailyQuote: Share as image button tapped for quote: ${it.text}")
-                shareQuoteAsImage(it.text)
-            }
-        }
     }
 
-    private fun loadDailyQuote() {
-        viewModel.getQuotes("📅 Daily").observe(viewLifecycleOwner) { quotes ->
+    private fun observeViewModel() {
+        viewModel.quotes.observe(viewLifecycleOwner) { quotes ->
             if (quotes.isNotEmpty()) {
                 val quote = quotes.random()
                 currentQuote = quote
                 val fadeIn = AlphaAnimation(0f, 1f)
-                fadeIn.duration = 1000
+                fadeIn.duration = 800
                 binding.quoteText.startAnimation(fadeIn)
                 binding.quoteText.text = quote.text
+                binding.quoteAuthor.text = "- ${quote.authorName}"
                 updateFavoriteButton(quote)
             } else {
                 binding.quoteText.text = "No quotes available for today."
+                binding.quoteAuthor.text = ""
             }
+        }
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            // Handle loading state, e.g., show or hide a progress indicator
         }
     }
 
+    private fun loadDailyQuote() {
+        val language = sharedPreferences.getString("app_language", "en") ?: "en"
+        val dailyCategory = CategoryConstants.ALL_CATEGORIES.firstOrNull { it.categoryId == "daily" }
+        dailyCategory?.let {
+            viewModel.loadQuotesByCategory(it.categoryId, language)
+        } ?: Logger.e("DailyQuote: Could not find 'daily' category.")
+    }
+
     private fun updateFavoriteButton(quote: Quote) {
-        if (quote.isFavorite) {
-            binding.favoriteButton.setIconResource(R.drawable.ic_favorite)
-        } else {
-            binding.favoriteButton.setIconResource(R.drawable.ic_favorite_border)
-        }
+        val icon = if (quote.isFavorite) R.drawable.ic_favorite else R.drawable.ic_favorite_border
+        binding.favoriteButton.setIconResource(icon)
     }
 
     private fun copyToClipboard(text: String) {
@@ -120,19 +138,24 @@ class DailyQuote : Fragment() {
         Toast.makeText(requireContext(), "Quote copied to clipboard", Toast.LENGTH_SHORT).show()
     }
 
-    private fun shareQuote(text: String) {
+    private fun shareQuote(text: String, author: String) {
+        val shareText = "\"$text\"\n- $author\n\nShared from DilSe Quotes"
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, text)
+            putExtra(Intent.EXTRA_TEXT, shareText)
         }
         startActivity(Intent.createChooser(intent, "Share quote via"))
     }
 
-    private fun shareQuoteAsImage(quoteText: String) {
+    private fun shareQuoteAsImage(quoteText: String, authorText: String) {
         val inflater = LayoutInflater.from(requireContext())
         val view = inflater.inflate(R.layout.quote_image_layout, null)
+
         val quoteTextView = view.findViewById<TextView>(R.id.quote_text_image)
+        val authorTextView = view.findViewById<TextView>(R.id.quote_author_image)
+
         quoteTextView.text = quoteText
+        authorTextView.text = "- $authorText"
 
         view.measure(
             View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),

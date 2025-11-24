@@ -43,7 +43,6 @@
     <color name="onError_dark">#690005</color>
     <color name="errorContainer_dark">#93000A</color>
     <color name="onErrorContainer_dark">#FFDAD6</color>
-    <color name="background_dark">#1B1B1F</color>
     <color name="onBackground_dark">#E4E2E6</color>
     <color name="surface_dark">#1B1B1F</color>
     <color name="onSurface_dark">#E4E2E6</color>
@@ -51,4 +50,9 @@
     <color name="onSurfaceVariant_dark">#C6C6D0</color>
     <color name="outline_dark">#90909A</color>
     <color name="purple_500">#715BC4</color>
+
+    <color name="background_dark">#1E1E1E</color>
+    <color name="background_dark_secondary">#2D2D2D</color>
+
+
 </resources>

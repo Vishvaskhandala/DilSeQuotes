@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "DilSe Quotes"
 include(":app")
+

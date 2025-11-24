@@ -5,12 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.dilsequotes.data.model.Category
+import com.example.dilsequotes.data.model.CategoryData
 import com.example.dilsequotes.databinding.ItemCategoryRefinedBinding
 
 class CategoryAdapter(
-    private val onCategoryClick: (Category) -> Unit
-) : ListAdapter<Category, CategoryAdapter.CategoryViewHolder>(CategoryDiffCallback()) {
+    private val onCategoryClick: (CategoryData) -> Unit,
+    private val getLocalizedName: (CategoryData) -> String
+) : ListAdapter<CategoryData, CategoryAdapter.CategoryViewHolder>(CategoryDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val binding = ItemCategoryRefinedBinding.inflate(
@@ -18,7 +19,7 @@ class CategoryAdapter(
             parent,
             false
         )
-        return CategoryViewHolder(binding, onCategoryClick)
+        return CategoryViewHolder(binding, onCategoryClick, getLocalizedName)
     }
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
@@ -27,12 +28,14 @@ class CategoryAdapter(
 
     class CategoryViewHolder(
         private val binding: ItemCategoryRefinedBinding,
-        private val onCategoryClick: (Category) -> Unit
+        private val onCategoryClick: (CategoryData) -> Unit,
+        private val getLocalizedName: (CategoryData) -> String
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(category: Category) {
-            binding.tvCategoryName.text = category.name
-            binding.tvQuoteCount.text = "${category.quoteCount} Quotes"
+        fun bind(category: CategoryData) {
+            val localizedName = getLocalizedName(category)
+            binding.tvCategoryName.text = "${category.emoji} $localizedName"
+            binding.tvQuoteCount.text = "${category.quoteCount} Quotes" // This can also be a string resource
 
             binding.root.setOnClickListener {
                 onCategoryClick(category)
@@ -41,12 +44,12 @@ class CategoryAdapter(
     }
 }
 
-class CategoryDiffCallback : DiffUtil.ItemCallback<Category>() {
-    override fun areItemsTheSame(oldItem: Category, newItem: Category): Boolean {
-        return oldItem.name == newItem.name
+class CategoryDiffCallback : DiffUtil.ItemCallback<CategoryData>() {
+    override fun areItemsTheSame(oldItem: CategoryData, newItem: CategoryData): Boolean {
+        return oldItem.categoryId == newItem.categoryId
     }
 
-    override fun areContentsTheSame(oldItem: Category, newItem: Category): Boolean {
+    override fun areContentsTheSame(oldItem: CategoryData, newItem: CategoryData): Boolean {
         return oldItem == newItem
     }
 }

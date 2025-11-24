@@ -4,14 +4,11 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.dilsequotes.data.dao.QuoteDao
+import com.example.dilsequotes.data.model.CategoryConstants
 import com.example.dilsequotes.data.model.Quote
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
-@Database(entities = [Quote::class], version = 1, exportSchema = false)
+@Database(entities = [Quote::class], version = 3, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun quoteDao(): QuoteDao
@@ -20,18 +17,6 @@ abstract class AppDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
-        private val roomCallback = object : Callback() {
-            override fun onCreate(db: SupportSQLiteDatabase) {
-                super.onCreate(db)
-                INSTANCE?.let { database ->
-                    // To call a suspend function, we must launch a coroutine.
-                    CoroutineScope(Dispatchers.IO).launch {
-                        database.quoteDao().insertAll(getSampleQuotes())
-                    }
-                }
-            }
-        }
-
         fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -39,52 +24,54 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "quotes_database"
                 )
-                    .addCallback(roomCallback)  // Attach the callback to populate data on creation
+                    // If a migration is not found, it will destroy and re-create the database.
+                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance
             }
         }
 
-        private fun getSampleQuotes(): List<Quote> {
+        // Made internal to be accessible from MainActivity for seeding
+        internal fun getSampleQuotes(): List<Quote> {
+            val love = CategoryConstants.ALL_CATEGORIES.first { it.categoryId == "love" }
+            val sad = CategoryConstants.ALL_CATEGORIES.first { it.categoryId == "sad" }
+            val motivation = CategoryConstants.ALL_CATEGORIES.first { it.categoryId == "motivation" }
+            val friendship = CategoryConstants.ALL_CATEGORIES.first { it.categoryId == "friendship" }
+            val festival = CategoryConstants.ALL_CATEGORIES.first { it.categoryId == "festival" }
+            val daily = CategoryConstants.ALL_CATEGORIES.first { it.categoryId == "daily" }
+
+            // All quotes now use the categoryId as the category key.
             return listOf(
-                // Love Category
-                Quote(text = "प्रेम ही सबसे बड़ी शक्ति है।", category = "❤️ Love", language = "hi"),
-                Quote(text = "दिल की सुनो, दिमाग की मत सुनो।", category = "❤️ Love", language = "hi"),
-                Quote(text = "તમને પ્રેમ મારો જીવન છે।", category = "❤️ Love", language = "gu"),
-                Quote(text = "Love is the greatest power in the world.", category = "❤️ Love", language = "en"),
-                Quote(text = "दो दिल एक साथ हो सकते हैं।", category = "❤️ Love", language = "hi"),
+                // Love Quotes
+                Quote(text = "Love all, trust a few, do wrong to none.", authorName = "William Shakespeare", category = love.categoryId, language = "en", emoji = love.emoji),
+                Quote(text = "प्यार अंधा होता है।", authorName = "Unknown", category = love.categoryId, language = "hi", emoji = love.emoji),
+                Quote(text = "પ્રેમ એજ જીવન છે.", authorName = "Unknown", category = love.categoryId, language = "gu", emoji = love.emoji),
 
-                // Sad Category
-                Quote(text = "दुःख जीवन का हिस्सा है।", category = "😢 Sad", language = "hi"),
-                Quote(text = "हर आँसू में एक कहानी है।", category = "😢 Sad", language = "hi"),
-                Quote(text = "દર્દ આપણને મજબૂત બનાવે છે।", category = "😢 Sad", language = "gu"),
-                Quote(text = "Sometimes, sadness is the price of love.", category = "😢 Sad", language = "en"),
+                // Sad Quotes
+                Quote(text = "Tears come from the heart and not from the brain.", authorName = "Leonardo da Vinci", category = sad.categoryId, language = "en", emoji = sad.emoji),
+                Quote(text = "आंसू दिल से आते हैं, दिमाग से नहीं।", authorName = "Unknown", category = sad.categoryId, language = "hi", emoji = sad.emoji),
+                Quote(text = "દુઃખ વગર સુખની કોઈ કિંમત નથી.", authorName = "Unknown", category = sad.categoryId, language = "gu", emoji = sad.emoji),
 
-                // Motivation Category
-                Quote(text = "हर दिन एक नया अवसर है।", category = "💪 Motivation", language = "hi"),
-                Quote(text = "सफलता का कोई शॉर्टकट नहीं है।", category = "💪 Motivation", language = "hi"),
-                Quote(text = "તમે જે વિચાર કરો છો તે બનો છો।", category = "💪 Motivation", language = "gu"),
-                Quote(text = "Success is not final, failure is not fatal.", category = "💪 Motivation", language = "en"),
-                Quote(text = "मंजिल उन्हीं को मिलती है।", category = "💪 Motivation", language = "hi"),
+                // Motivation Quotes
+                Quote(text = "The only way to do great work is to love what you do.", authorName = "Steve Jobs", category = motivation.categoryId, language = "en", emoji = motivation.emoji),
+                Quote(text = "महान काम करने का एकमात्र तरीका यह है कि आप जो करते हैं उससे प्यार करें।", authorName = "Unknown", category = motivation.categoryId, language = "hi", emoji = motivation.emoji),
+                Quote(text = "તમારી જાત પર વિશ્વાસ રાખો.", authorName = "Unknown", category = motivation.categoryId, language = "gu", emoji = motivation.emoji),
 
-                // Friendship Category
-                Quote(text = "दोस्ती एक सुंदर रिश्ता है।", category = "🤝 Friendship", language = "hi"),
-                Quote(text = "सच्चा दोस्त दुर्लभ होता है।", category = "🤝 Friendship", language = "hi"),
-                Quote(text = "મિત્રતા જીવનનો સાથી મોટો આશીર્વાદ છે।", category = "🤝 Friendship", language = "gu"),
-                Quote(text = "A friend in need is a friend indeed.", category = "🤝 Friendship", language = "en"),
+                // Friendship Quotes
+                Quote(text = "A friend is someone who knows all about you and still loves you.", authorName = "Elbert Hubbard", category = friendship.categoryId, language = "en", emoji = friendship.emoji),
+                Quote(text = "दोस्ती में धन्यवाद और सॉरी नहीं होता।", authorName = "Unknown", category = friendship.categoryId, language = "hi", emoji = friendship.emoji),
+                Quote(text = "મિત્રતા એ જીવનનો સૌથી મોટો આશીર્વાદ છે.", authorName = "Unknown", category = friendship.categoryId, language = "gu", emoji = friendship.emoji),
 
-                // Festival Category
-                Quote(text = "त्योहार खुशियों का त्योहार है।", category = "🎉 Festival", language = "hi"),
-                Quote(text = "रंगों का त्योहार है होली।", category = "🎉 Festival", language = "hi"),
-                Quote(text = "દિવાલી પ્રકાશ અને આનંદનો પર્વ છે।", category = "🎉 Festival", language = "gu"),
-                Quote(text = "Festivals bring people together.", category = "🎉 Festival", language = "en"),
+                // Festival Quotes
+                Quote(text = "Every festival is a reason to celebrate life.", authorName = "Unknown", category = festival.categoryId, language = "en", emoji = festival.emoji),
+                Quote(text = "त्योहार जीवन का उत्सव हैं।", authorName = "Unknown", category = festival.categoryId, language = "hi", emoji = festival.emoji),
+                Quote(text = "દરેક તહેવાર જીવનની ઉજવણી કરવાનો એક કારણ છે.", authorName = "Unknown", category = festival.categoryId, language = "gu", emoji = festival.emoji),
 
                 // Daily Quotes
-                Quote(text = "आज एक नई शुरुआत है।", category = "📅 Daily", language = "hi"),
-                Quote(text = "जीवन को जियो, सोचो मत।", category = "📅 Daily", language = "hi"),
-                Quote(text = "દર જીવન એક ભણતર છે।", category = "📅 Daily", language = "gu"),
-                Quote(text = "Every day is a new beginning.", category = "📅 Daily", language = "en")
+                Quote(text = "The sun is new each day.", authorName = "Heraclitus", category = daily.categoryId, language = "en", emoji = daily.emoji),
+                Quote(text = "हर दिन एक नया सवेरा है।", authorName = "Unknown", category = daily.categoryId, language = "hi", emoji = daily.emoji),
+                Quote(text = "આજ નો દિવસ શ્રેષ્ઠ છે.", authorName = "Unknown", category = daily.categoryId, language = "gu", emoji = daily.emoji)
             )
         }
     }

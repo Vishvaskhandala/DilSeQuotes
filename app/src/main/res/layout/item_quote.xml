@@ -1,35 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="8dp">
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="4dp"
+    app:strokeWidth="0dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <!-- Gradient Background Container -->
+    <FrameLayout
+        android:id="@+id/quote_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:background="@drawable/quote_gradient_bg">
 
-        <TextView
-            android:id="@+id/quote_text"
-            android:layout_width="0dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            app:layout_constraintEnd_toStartOf="@+id/favorite_button"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:minHeight="180dp"
+            android:padding="24dp">
 
-        <ImageButton
-            android:id="@+id/favorite_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_favorite_border"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <!-- Decorative Top Quote Mark -->
+            <TextView
+                android:id="@+id/opening_quote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#80FFFFFF"
+                android:textSize="48sp"
+                android:fontFamily="serif"
+                android:layout_marginTop="-12dp"
+                android:layout_marginStart="-8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <!-- Shayari Text -->
+            <TextView
+                android:id="@+id/quote_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/poppins_medium"
+                android:lineSpacingExtra="8dp"
+                android:text="Your beautiful shayari will appear here with elegant styling"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:letterSpacing="0.01"
+                app:layout_constraintEnd_toStartOf="@+id/favorite_button"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/opening_quote" />
 
-</androidx.cardview.widget.CardView>
+            <!-- Author Name (if needed) -->
+            <TextView
+                android:id="@+id/quote_author"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="- Unknown"
+                android:textColor="#CCE0E0E0"
+                android:textSize="14sp"
+                android:gravity="end"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@id/quote_text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/quote_text" />
+
+            <!-- Decorative Bottom Quote Mark -->
+            <TextView
+                android:id="@+id/closing_quote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#80FFFFFF"
+                android:textSize="48sp"
+                android:fontFamily="serif"
+                android:layout_marginBottom="-12dp"
+                android:layout_marginEnd="-8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Favorite Button (Floating Style) -->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/favorite_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_favorite_border"
+                app:fabCustomSize="48dp"
+                app:maxImageSize="24dp"
+                app:tint="@android:color/white"
+                app:backgroundTint="#40FFFFFF"
+                app:borderWidth="0dp"
+                app:elevation="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
+
+</com.google.android.material.card.MaterialCardView>

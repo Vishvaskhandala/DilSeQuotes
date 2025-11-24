@@ -43,4 +43,40 @@
         android:label="Category Quotes"
         tools:layout="@layout/fragment_category_quotes" />
 
+    <fragment
+        android:id="@+id/profile"
+        android:name="com.example.dilsequotes.fragments.ProfileFragment"
+        android:label="ProfileFragment" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_history"
+        android:name="com.example.dilsequotes.fragments.HistoryFragment"
+        android:label="History"
+        tools:layout="@layout/fragment_history" />
+
+    <fragment
+        android:id="@+id/nav_author"
+        android:name="com.example.dilsequotes.fragments.AuthorFragment"
+        android:label="Author"
+        tools:layout="@layout/fragment_author" />
+
+    <fragment
+        android:id="@+id/nav_notifications"
+        android:name="com.example.dilsequotes.fragments.NotificationsFragment"
+        android:label="Notifications"
+        tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/quoteEditorFragment"
+        android:name="com.example.dilsequotes.fragments.QuoteEditorFragment"
+        android:label="Quote Editor"
+        tools:layout="@layout/fragment_quote_editor">
+
+        <argument
+            android:name="quote"
+            app:argType="com.example.dilsequotes.data.model.Quote"/>
+
+    </fragment>
+
 </navigation>

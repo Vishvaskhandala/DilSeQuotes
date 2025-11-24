@@ -1,21 +1,22 @@
 package com.example.dilsequotes.fragments
 
 import android.content.Context
-import android.content.SharedPreferences
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
-import com.example.dilsequotes.Logger
+import com.example.dilsequotes.R
 import com.example.dilsequotes.databinding.FragmentSettingsBinding
 
 class Settings : Fragment() {
 
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
-    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,54 +30,80 @@ class Settings : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Logger.d("SettingsFragment: onViewCreated - Settings screen displayed")
-        sharedPreferences = requireContext().getSharedPreferences("DilSeShayari", Context.MODE_PRIVATE)
+        setupClickListeners()
+    }
 
+    private fun setupClickListeners() {
         binding.cardTheme.setOnClickListener {
-            Logger.d("SettingsFragment: Appearance card tapped")
             showThemeSelectionDialog()
         }
 
         binding.cardRateUs.setOnClickListener {
-            Logger.d("SettingsFragment: Rate Us card tapped")
-            // Add rate us logic here
+            openPlayStoreForRating()
         }
 
         binding.cardShareApp.setOnClickListener {
-            Logger.d("SettingsFragment: Share App card tapped")
-            // Add share app logic here
+            shareApp()
         }
 
         binding.cardPrivacyPolicy.setOnClickListener {
-            Logger.d("SettingsFragment: Privacy Policy card tapped")
-            // Add privacy policy logic here
+            openPrivacyPolicy()
         }
     }
 
     private fun showThemeSelectionDialog() {
         val themes = arrayOf("Light", "Dark", "System Default")
-        val modes = arrayOf(
+        val themeModes = arrayOf(
             AppCompatDelegate.MODE_NIGHT_NO,
             AppCompatDelegate.MODE_NIGHT_YES,
             AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
         )
 
-        val currentNightMode = AppCompatDelegate.getDefaultNightMode()
-        val selectedIndex = modes.indexOf(currentNightMode)
+        val sharedPreferences = requireContext().getSharedPreferences("DilSeShayari", Context.MODE_PRIVATE)
+        val currentTheme = sharedPreferences.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        val selectedIndex = themeModes.indexOf(currentTheme)
 
-        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext())
             .setTitle("Select Theme")
             .setSingleChoiceItems(themes, selectedIndex) { dialog, which ->
-                val selectedMode = modes[which]
-                AppCompatDelegate.setDefaultNightMode(selectedMode)
-                sharedPreferences.edit().putInt("theme_mode", selectedMode).apply()
+                val selectedMode = themeModes[which]
+                if (selectedMode != currentTheme) {
+                    sharedPreferences.edit().putInt("theme_mode", selectedMode).apply()
+                    AppCompatDelegate.setDefaultNightMode(selectedMode)
+                }
                 dialog.dismiss()
             }
-            .setNegativeButton("Cancel") { dialog, _ ->
-                dialog.dismiss()
-            }
+            .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
             .show()
     }
+
+    private fun openPlayStoreForRating() {
+        // Replace with your app's package name
+        val packageName = requireContext().packageName
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
+        } catch (e: android.content.ActivityNotFoundException) {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
+        }
+    }
+
+    private fun shareApp() {
+        val appName = getString(R.string.app_name)
+        val packageName = requireContext().packageName
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, "Check out this amazing quotes app: $appName\n\nhttps://play.google.com/store/apps/details?id=$packageName")
+        }
+        startActivity(Intent.createChooser(shareIntent, "Share app via"))
+    }
+
+    private fun openPrivacyPolicy() {
+        // Replace with your privacy policy URL
+        val url = "https://www.yourprivacypolicy.com"
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        startActivity(intent)
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">दिल से उद्धरण</string>
+    <string name="app_name_styled">💝 दिल से उद्धरण</string>
+    <string name="tagline">अपनी भावनाओं को व्यक्त करें</string>
+    <string name="quote_of_the_day_title">आज का विचार 🌤️</string>
+    <string name="browse_categories">श्रेणियाँ ब्राउज़ करें</string>
+    <string name="quote_placeholder">उद्धरण लोड हो रहा है...</string>
+    <string name="loading">लोड हो रहा है...</string>
+    <string name="select_language">भाषा चुनें</string>
+    <string name="cancel">रद्द करें</string>
+    <string name="copy_quote">उद्धरण कॉपी करें</string>
+    <string name="add_to_favorites">पसंदीदा में जोड़ें</string>
+    <string name="share_quote">उद्धरण साझा करें</string>
+    <string name="category_love">❤️ प्यार</string>
+    <string name="category_sad">😢 दुख</string>
+    <string name="category_motivation">💪 प्रेरणा</string>
+    <string name="category_friendship">🤝 दोस्ती</string>
+    <string name="category_festival">🎉 त्योहार</string>
+    <string name="category_daily">📅 दैनिक</string>
+    <string name="category_unknown">अज्ञात</string>
+    <string name="navigation_drawer_open">नेविगेशन ड्रॉअर खोलें</string>
+    <string name="navigation_drawer_close">नेविगेशन ड्रॉअर बंद करें</string>
+</resources>

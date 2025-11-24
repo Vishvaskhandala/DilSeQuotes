@@ -9,26 +9,50 @@
     tools:context=".fragments.DailyQuote">
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/quote_card_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginBottom="24dp"
         app:cardCornerRadius="16dp"
         app:cardElevation="0dp"
         app:strokeWidth="1dp"
         app:strokeColor="?attr/colorOutline"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/actions_bar"
-        android:layout_marginBottom="24dp">
+        app:layout_constraintBottom_toTopOf="@+id/actions_bar">
 
-        <TextView
-            android:id="@+id/quote_text"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:padding="24dp"
-            android:textAppearance="?attr/textAppearanceHeadlineSmall"
-            android:fontFamily="@font/poppins_regular"
-            android:textColor="?attr/colorOnSurface"
-            tools:text="&quot;The only way to do great work is to love what you do.&quot;" />
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/quote_text"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:padding="24dp"
+
+                android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                android:fontFamily="@font/poppins_regular"
+                android:textColor="?attr/colorOnSurface"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/quoteAuthor"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="&quot;The only way to do great work is to love what you do.&quot;" />
+
+            <TextView
+                android:id="@+id/quoteAuthor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:padding="16dp"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
+                android:fontFamily="@font/poppins_regular"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="- Author" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -38,6 +62,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
+        android:layout_marginBottom="75dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -70,12 +95,7 @@
             android:layout_height="wrap_content"
             app:icon="@drawable/ic_share" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/share_image_button"
-            style="@style/Widget.App.Button.IconOnly"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:icon="@drawable/ic_image" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
